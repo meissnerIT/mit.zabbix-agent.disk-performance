@@ -1,0 +1,14 @@
+---
+# This playbook contains zabbix agent -> disk performance plays
+
+- name: Copy zabbix low level discovery script
+  copy: src=zabbix-lld-disk dest=/usr/local/bin/zabbix-lld-disk mode=0755
+  sudo: yes
+
+- name: Add zabbix-agent configuration file
+  copy: src=local-userparameter_disk-performance.conf
+        dest=/etc/zabbix/zabbix_agentd.d/local-userparameter_disk-performance.conf
+        mode=0644
+  notify: restart zabbix-agent
+  sudo: yes
+

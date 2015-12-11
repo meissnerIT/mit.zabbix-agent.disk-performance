@@ -10,3 +10,7 @@ Based on https://github.com/grundic/zabbix-disk-performance with the following c
     * DEVICENAME will be "vg--lv" if the devices begins with dm-
 * Can now be used as ansible module
 
+# Notes
+
+* All active items are using `/proc/diskstats`, see [iostats.txt](https://www.kernel.org/doc/Documentation/iostats.txt) for details.
+* The default zabbix items (`vfs.dev.read` and `vfs.dev.write`) are included in the template but disabled by default.

@@ -3,12 +3,29 @@
 
 - name: Copy zabbix low level discovery script
   copy: src=zabbix-lld-disk dest=/usr/local/bin/zabbix-lld-disk mode=0755
-  sudo: yes
+  become: yes
 
-- name: Add zabbix-agent configuration file
+# This is the zabbix.com default
+- stat: path=/etc/zabbix/zabbix_agentd.d
+  register: zabbix_agent_d
+
+# This is the debian default
+- stat: path=/etc/zabbix/zabbix_agentd.conf.d
+  register: zabbix_agent_conf_d
+
+- name: Add zabbix-agent configuration file (zabbix_agentd.d)
   copy: src=local-userparameter_disk-performance.conf
         dest=/etc/zabbix/zabbix_agentd.d/local-userparameter_disk-performance.conf
         mode=0644
   notify: restart zabbix-agent
-  sudo: yes
+  become: yes
+  when: zabbix_agent_d.stat.exists
+
+- name: Add zabbix-agent configuration file (zabbix_agentd.conf.d)
+  copy: src=local-userparameter_disk-performance.conf
+        dest=/etc/zabbix/zabbix_agentd.conf.d/local-userparameter_disk-performance.conf
+        mode=0644
+  notify: restart zabbix-agent
+  become: yes
+  when: zabbix_agent_conf_d.stat.exists
 
